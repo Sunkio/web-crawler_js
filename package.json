@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/Sunkio/web-crawler_js/issues"
   },
-  "homepage": "https://github.com/Sunkio/web-crawler_js#readme"
+  "homepage": "https://github.com/Sunkio/web-crawler_js#readme",
+  "dependencies": {
+    "jsdom": "^21.1.0"
+  }
 }
