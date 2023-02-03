@@ -1,0 +1,23 @@
+{
+  "name": "web-crawler_js",
+  "version": "1.0.0",
+  "description": "You must have Node.js installed on your computer. This project was developed using Node.js v18.7.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.3.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sunkio/web-crawler_js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Sunkio/web-crawler_js/issues"
+  },
+  "homepage": "https://github.com/Sunkio/web-crawler_js#readme"
+}
