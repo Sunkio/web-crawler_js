@@ -30,29 +30,45 @@ test('normalizeURL should work with a regular HTTP URL too', () => {
 });
 
 test('getURLsFromHTML should return an array of URLs from absolute URLs', () => {
-    const inputPath =
+    const inputHTML =
         `<html>
             <body>
                 <a href="https://blog.boot.dev/path">Blog</a>
-                <a href="https://twitter.com/bootdev">Twitter</a>
+                <a href="https://blog.boot.dev/about">About</a>
             </body>
         </html>`;
     const inputBaseURL = "https://blog.boot.dev";
-    const actual = getURLsFromHTML(inputPath, inputBaseURL);
-    const expected = ["https://blog.boot.dev/path", "https://twitter.com/bootdev"];
+    const actual = getURLsFromHTML(inputHTML, inputBaseURL);
+    const expected = ["https://blog.boot.dev/path", "https://blog.boot.dev/about"];
     expect(actual).toEqual(expected);
 });
 
 test('getURLsFromHTML should return an array of URLs from relative URLs', () => {
-    const inputPath =
+    const inputHTML =
         `<html>
             <body>
-                <a href="/path/">Blog</a>
-                <a href="/bootdev">Twitter</a>
+                <a href="/path">Blog</a>
+                <a href="/about">About</a>
             </body>
         </html>`;
     const inputBaseURL = "https://blog.boot.dev";
-    const actual = getURLsFromHTML(inputPath, inputBaseURL);
-    const expected = ["https://blog.boot.dev/path", "https://twitter.com/bootdev"];
+    const actual = getURLsFromHTML(inputHTML, inputBaseURL);
+    const expected = ["https://blog.boot.dev/path", "https://blog.boot.dev/about"];
+    expect(actual).toEqual(expected);
+});
+
+test('getURLsFromHTML should not return invalid URLs', () => {
+    const inputHTML =
+        `<html>
+            <body>
+                <a href="https://blog.boot.dev/path">Blog</a>
+                <a href="https://blog.boot.dev/about">About</a>
+
+                <a href="hah, not a URL!">No Link</a>
+            </body>
+        </html>`;
+    const inputBaseURL = "https://blog.boot.dev";
+    const actual = getURLsFromHTML(inputHTML, inputBaseURL);
+    const expected = ["https://blog.boot.dev/path", "https://blog.boot.dev/about"];
     expect(actual).toEqual(expected);
 });
