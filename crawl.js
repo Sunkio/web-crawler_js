@@ -1,5 +1,9 @@
 const { JSDOM } = require('jsdom');
 
+const crawlPage = async (baseURL) => {
+
+}
+
 const getURLsFromHTML = (htmlBody, baseURL) => {
     const dom = new JSDOM(htmlBody, { baseURL });
     const links = dom.window.document.querySelectorAll('a');
@@ -15,8 +19,7 @@ const getURLsFromHTML = (htmlBody, baseURL) => {
                 console.log(`${e.message}:  ${url}`);
                 return false;
             }
-        })
-
+        });
 
     return urls;
 }
@@ -32,6 +35,15 @@ const normalizeURL = (urlStr) => {
     }
     return hostPath;
 };
+
+const crawlPage = async (baseURL) => {
+    const normalizedURL = normalizeURL(baseURL);
+    const response = await fetch(normalizedURL);
+    const htmlBody = await response.text();
+    const urls = getURLsFromHTML(htmlBody, normalizedURL);
+    return urls;
+}
+
 
 module.exports = {
     normalizeURL,
