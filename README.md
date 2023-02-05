@@ -16,7 +16,7 @@ npm ci
 If you encounter any problems with the installation, first check whether you're using a matching Node.js version.
 This project was build with node V18.7.0. If you use nvm, it should be running automatically.
 
-If you're Node versione isn't an issue, try deleting the package-lock.json file, and reinstall the dependencies by running the following commands:
+If you're Node version isn't an issue, try deleting the package-lock.json file, and reinstall the dependencies by running the following commands:
 
 ``` bash
 npm init - to initialize the project
