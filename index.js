@@ -1,5 +1,6 @@
-const main = () => {
+const { crawlPage } = require('./crawl.js');
 
+const main = () => {
     const readline = require('readline').createInterface({
         input: process.stdin,
         output: process.stdout,
@@ -16,6 +17,7 @@ const main = () => {
             } else if (trimmedUrl.startsWith('http://') || trimmedUrl.startsWith('https://')) {
                 console.log(`Crawling ${trimmedUrl}...`);
                 readline.close();
+                crawlPage(trimmedUrl);
                 return;
             } else {
                 console.log('Please try enter a valid URL');
