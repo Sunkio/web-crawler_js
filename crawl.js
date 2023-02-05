@@ -1,6 +1,19 @@
 const { JSDOM } = require('jsdom');
 
-const crawlPage = async (currentURL) => {
+const crawlPage = async (baseURL, currentURL, pages) => {
+    const baseURLObj = new URL(baseURL);
+    const currentURLObj = new URL(currentURL);
+    if (baseURLObj.hostname !== currentURLObj.hostname) {
+        return pages;
+    }
+
+    const normalizedURL = normalizeURL(currentURL);
+    if (pages[normalizedURL] > 0) {
+        pages[normalizedURL]++;
+        return pages;
+    } else {
+        pages[normalizedURL] = 1;
+    }
     console.log(`actively crawling ${currentURL}`);
 
     try {
@@ -9,27 +22,31 @@ const crawlPage = async (currentURL) => {
 
         if (response.status > 399) {
             console.log(`error in fetch with status code: ${response.status}, on page: ${currentURL}`);
-            return;
+            return pages;
         } else if (htmlBody === null) {
             console.log(`no html body found on page: ${currentURL}`);
-            return;
+            return pages;
         } else if (htmlBody.length === 0) {
             console.log(`empty html body found on page: ${currentURL}`);
-            return;
+            return pages;
         }
 
         const contentType = response.headers.get('content-type');
         if (!contentType || !contentType.includes('text/html')) {
             console.log(`not an html page: ${currentURL}`);
-            return;
+            return pages;
         }
 
-        console.log(htmlBody);
-        const urls = getURLsFromHTML(htmlBody, currentURL);
-        return urls;
+        //console.log(htmlBody);
+        const urls = getURLsFromHTML(htmlBody, baseURL);
+
+        for (const url of urls) {
+            pages = await crawlPage(baseURL, url, pages);
+        }
     } catch (e) {
         console.log(`error in fetch: ${e.message}, on page: ${currentURL}`);
     }
+    return pages;
 }
 
 const getURLsFromHTML = (htmlBody, baseURL) => {
@@ -53,7 +70,7 @@ const getURLsFromHTML = (htmlBody, baseURL) => {
 }
 const normalizeURL = (urlStr) => {
     const urlObj = new URL(urlStr);
-    console.log(urlObj);
+    //console.log(urlObj);
     const { hostname, pathname } = urlObj;
     const pathNameLower = pathname.toLowerCase();
     const hostPath = `${hostname}${pathNameLower}`;
