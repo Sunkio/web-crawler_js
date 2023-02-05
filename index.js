@@ -19,7 +19,7 @@ const main =  () => {
                 readline.close();
                 const pages = await crawlPage(trimmedUrl, trimmedUrl, {});
                 for (const page of Object.entries(pages)) {
-                    console.log(page);
+                    //console.log(page);
                 }
                 return;
             } else {
