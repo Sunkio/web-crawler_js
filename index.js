@@ -1,4 +1,6 @@
 const { crawlPage } = require('./crawl.js');
+const { sortPages } = require('./report.js');
+const {printReport} = require("./report");
 
 const main =  () => {
     const readline = require('readline').createInterface({
@@ -18,9 +20,7 @@ const main =  () => {
                 console.log(`Crawling ${trimmedUrl}...`);
                 readline.close();
                 const pages = await crawlPage(trimmedUrl, trimmedUrl, {});
-                for (const page of Object.entries(pages)) {
-                    //console.log(page);
-                }
+                printReport(pages);
                 return;
             } else {
                 console.log('Please try enter a valid URL');
