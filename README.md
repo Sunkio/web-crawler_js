@@ -1,4 +1,7 @@
 # Web Crawler
+
+https://wegslane.dev 
+
 ## Description
 ## How to use it
 ### Prerequisits
@@ -24,3 +27,13 @@ npm install jsdom
 
 
 npm start - to execute the project starting with index.js as an entrypoint
+
+
+<!--
+Add CSV file to the project:
+https://www.brcline.com/blog/outputting-a-csv-file-from-node-js
+
+try renaming index.js to server.js and then run npm start (delete index.js from json file)
+References: (cp suggestion:) https://stackoverflow.com/questions/6084360/using-node-js-as-a-simple-web-server
+(my finding:) https://stackoverflow.com/questions/36002413/conventions-for-app-js-index-js-and-server-js-in-node-js
+-->
