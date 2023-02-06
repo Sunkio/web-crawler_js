@@ -34,6 +34,7 @@ Run the following command in the root directory of the project to start the CLI:
 npm start 
 ```
 Then simply follow the instructions.
+The program will ask you for a URL. Enter the URL you want to crawl. The program will then crawl the URL and all its subpages. It will then output the results to the terminal and export them to .csv files. The files will be saved in the reports directory.
 
 
 ## To Do
