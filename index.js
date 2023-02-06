@@ -23,7 +23,7 @@ const main =  () => {
                 printReport(pages, extPages, trimmedUrl);
                 return;
             } else {
-                console.log('Please try enter a valid URL');
+                console.log('Please try again and enter a valid URL that starts with http:// or https://');
                 getValidInput();
             }
         });
