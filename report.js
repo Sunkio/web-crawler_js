@@ -25,7 +25,7 @@ const createCsv = (sortedPages, typeOfLinks, trimmedURL) => {
     const csv = new Parser({fields});
     fs.writeFile(createFilename(typeOfLinks, trimmedURL), csv.parse(pagesObj) , function (err) {
         if (err) throw err;
-        console.log('CSV file created and saved in reports directory!');
+        console.log(`New ${typeOfLinks} links CSV file created and saved in reports directory!`);
     });
 }
 
@@ -39,8 +39,8 @@ const sortPages = (pages) => {
 
 function printReport(pages, extPages, trimmedURL) {
     const sortedPages = sortPages(pages);
-    const sortedExtPages = sortPages(extPages);
 
+    const sortedExtPages = sortPages(extPages);
     console.log(`
         INTERNAL LINKS - CRAWL REPORT
      ====================================
@@ -53,6 +53,22 @@ function printReport(pages, extPages, trimmedURL) {
         INTERNAL LINKS - END OF REPORT
      ====================================
         `);
+
+    createCsv(sortedPages, 'internal', trimmedURL);
+
+    if (sortedExtPages.length < 1) {
+        console.log(`
+        EXTERNAL LINKS - CRAWL REPORT
+     ====================================
+        `);
+        console.log('No external links found!');
+        console.log(`
+        EXTERNAL LINKS - END OF REPORT
+     ====================================
+        `);
+        console.log('No external links CSV file created since there aren\'t any links!');
+        return;
+    } else {
 
     console.log(`
         EXTERNAL LINKS - CRAWL REPORT
@@ -67,8 +83,11 @@ function printReport(pages, extPages, trimmedURL) {
      ====================================
         `);
 
-    createCsv(sortedPages, 'internal', trimmedURL);
-    createCsv(sortedExtPages, 'external', trimmedURL);
+        createCsv(sortedExtPages, 'external', trimmedURL);
+    }
+
+
+
 }
 
 module.exports = {
