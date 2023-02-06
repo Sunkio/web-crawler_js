@@ -21,7 +21,6 @@ const getURLsFromHTML = (htmlBody, baseURL) => {
 }
 const normalizeURL = (urlStr) => {
     const urlObj = new URL(urlStr);
-    //console.log(urlObj);
     const { hostname, pathname } = urlObj;
     const pathNameLower = pathname.toLowerCase();
     const hostPath = `${hostname}${pathNameLower}`;
@@ -32,17 +31,25 @@ const normalizeURL = (urlStr) => {
     return hostPath;
 };
 
-const crawlPage = async (baseURL, currentURL, pages) => {
+const crawlPage = async (baseURL, currentURL, pages, extPages) => {
     const baseURLObj = new URL(baseURL);
     const currentURLObj = new URL(currentURL);
+    const normalizedURL = normalizeURL(currentURL);
+
     if (baseURLObj.hostname !== currentURLObj.hostname) {
-        return pages;
+        if (extPages[normalizedURL] > 0) {
+            extPages[normalizedURL]++;
+        } else if (extPages[normalizedURL] !== "mailto:" && extPages[normalizedURL] !== "tel:"
+            && extPages[normalizedURL] !== "javascript:void(0)") {
+            extPages[normalizedURL] = 1;
+        }
+        return [pages, extPages];
     }
 
-    const normalizedURL = normalizeURL(currentURL);
+
     if (pages[normalizedURL] > 0) {
         pages[normalizedURL]++;
-        return pages;
+        return [pages, extPages];
     } else {
         pages[normalizedURL] = 1;
     }
@@ -54,34 +61,31 @@ const crawlPage = async (baseURL, currentURL, pages) => {
 
         if (response.status > 399) {
             console.log(`error in fetch with status code: ${response.status}, on page: ${currentURL}`);
-            return pages;
+            return [pages, extPages];
         } else if (htmlBody === null) {
             console.log(`no html body found on page: ${currentURL}`);
-            return pages;
+            return [pages, extPages];
         } else if (htmlBody.length === 0) {
             console.log(`empty html body found on page: ${currentURL}`);
-            return pages;
+            return [pages, extPages];
         }
 
         const contentType = response.headers.get('content-type');
         if (!contentType || !contentType.includes('text/html')) {
             console.log(`not an html page: ${currentURL}`);
-            return pages;
+            return [pages, extPages];
         }
 
-        //console.log(htmlBody);
         const urls = getURLsFromHTML(htmlBody, baseURL);
 
         for (const url of urls) {
-            pages = await crawlPage(baseURL, url, pages);
+            [pages, extPages] = await crawlPage(baseURL, url, pages, extPages);
         }
     } catch (e) {
         console.log(`error in fetch: ${e.message}, on page: ${currentURL}`);
     }
-    return pages;
+    return [pages, extPages];
 }
-
-
 
 module.exports = {
     normalizeURL,

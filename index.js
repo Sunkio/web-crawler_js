@@ -19,8 +19,8 @@ const main =  () => {
             } else if (trimmedUrl.startsWith('http://') || trimmedUrl.startsWith('https://')) {
                 console.log(`Crawling ${trimmedUrl}...`);
                 readline.close();
-                const pages = await crawlPage(trimmedUrl, trimmedUrl, {});
-                printReport(pages);
+                const [pages, extPages] = await crawlPage(trimmedUrl, trimmedUrl, {}, {});
+                printReport(pages, extPages, trimmedUrl);
                 return;
             } else {
                 console.log('Please try enter a valid URL');

@@ -2,7 +2,7 @@
 const fs = require('fs');
 const { Parser } = require('json2csv');
 
-const createFilename = () => {
+const createFilename = (typeOfLinks, trimmedURL) => {
     const date = new Date();
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
@@ -10,10 +10,11 @@ const createFilename = () => {
     const hours = date.getHours();
     const minutes = date.getMinutes();
     const seconds = date.getSeconds();
-    return `./reports/internal-links_${year}-${month}-${day}_${hours}-${minutes}-${seconds}.csv`;
+    const trimmedURLArr = trimmedURL.replace('.', '-').split('/');
+    return `./reports/${trimmedURLArr[2]}_${typeOfLinks}_${year}-${month}-${day}_${hours}-${minutes}-${seconds}.csv`;
 }
 
-const createCsv = (sortedPages) => {
+const createCsv = (sortedPages, typeOfLinks, trimmedURL) => {
     const fields = ['url', 'count'];
     const pagesObj = sortedPages.map((page) => {
         return {
@@ -22,7 +23,7 @@ const createCsv = (sortedPages) => {
         }
     });
     const csv = new Parser({fields});
-    fs.writeFile(createFilename(), csv.parse(pagesObj) , function (err) {
+    fs.writeFile(createFilename(typeOfLinks, trimmedURL), csv.parse(pagesObj) , function (err) {
         if (err) throw err;
         console.log('CSV file created and saved in reports directory!');
     });
@@ -36,21 +37,38 @@ const sortPages = (pages) => {
     return pagesArr;
 }
 
-function printReport(pages) {
+function printReport(pages, extPages, trimmedURL) {
     const sortedPages = sortPages(pages);
+    const sortedExtPages = sortPages(extPages);
+
     console.log(`
-    CRAWL REPORT
-    ============
+        INTERNAL LINKS - CRAWL REPORT
+     ====================================
     `);
     for (const page of sortedPages) {
         console.log(`Found ${page[1]} links to: ${page[0]}`);
     }
 
     console.log(`
-        END OF REPORT
-        ============
+        INTERNAL LINKS - END OF REPORT
+     ====================================
         `);
-    createCsv(sortedPages);
+
+    console.log(`
+        EXTERNAL LINKS - CRAWL REPORT
+     ====================================
+    `);
+    for (const page of sortedExtPages) {
+        console.log(`Found ${page[1]} links to: ${page[0]}`);
+    }
+
+    console.log(`
+        EXTERNAL LINKS - END OF REPORT
+     ====================================
+        `);
+
+    createCsv(sortedPages, 'internal', trimmedURL);
+    createCsv(sortedExtPages, 'external', trimmedURL);
 }
 
 module.exports = {
