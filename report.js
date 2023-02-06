@@ -2,6 +2,16 @@
 const fs = require('fs');
 const { Parser } = require('json2csv');
 
+const createFilename = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+    return `./reports/internal-links_${year}-${month}-${day}_${hours}-${minutes}-${seconds}.csv`;
+}
 
 const createCsv = (sortedPages) => {
     const fields = ['url', 'count'];
@@ -12,7 +22,7 @@ const createCsv = (sortedPages) => {
         }
     });
     const csv = new Parser({fields});
-    fs.writeFile('./reports/crawl-report.csv', csv.parse(pagesObj) , function (err) {
+    fs.writeFile(createFilename(), csv.parse(pagesObj) , function (err) {
         if (err) throw err;
         console.log('CSV file created and saved in reports directory!');
     });
@@ -23,7 +33,6 @@ const sortPages = (pages) => {
     pagesArr.sort((a, b) => {
         return b[1] - a[1];
     })
-
     return pagesArr;
 }
 
