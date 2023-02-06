@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Sunkio/web-crawler_js#readme",
   "dependencies": {
-    "jsdom": "^21.1.0"
+    "jsdom": "^21.1.0",
+    "json2csv": "^6.0.0-alpha.2"
   }
 }
